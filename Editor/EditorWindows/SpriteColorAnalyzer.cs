@@ -4,18 +4,13 @@ using UnityEngine;
 
 namespace UtilsToolbox.Editor.EditorWindows
 {
-    public class SpriteColorAnalyzer : EditorWindowBase
+    public class SpriteColorAnalyzer : EditorWindow
     {
         private Sprite _sprite;
         private readonly Dictionary<Color, string> _colorHexMap = new Dictionary<Color, string>();
         private int _colorCounter;
         private int _maxDisplayedColors = 100;
         private Vector2 _maxResolution = new Vector2(128, 128);
-
-        protected override void SetSize()
-        {
-            
-        }
 
         private void OnGUI()
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UtilsToolbox.Editor.EditorWindows
 {
-    public class GameObjectRenamer : EditorWindowBase
+    public class GameObjectRenamer : EditorWindow
     {
         private enum NumerationOrder
         {
@@ -25,11 +25,6 @@ namespace UtilsToolbox.Editor.EditorWindows
         
         private string _strToReplace = "";
         private string _strReplacement = "";
-        
-        protected override void SetSize()
-        {
-            
-        }
 
         private void OnGUI()
         {

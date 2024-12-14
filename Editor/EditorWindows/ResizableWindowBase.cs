@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace UtilsToolbox.Editor.EditorWindows
     /// <summary>
     /// Base class for editor windows with resizable content in horizontal layout
     /// </summary>
-    public abstract class ResizableWindowBase : EditorWindowBase
+    public abstract class ResizableWindowBase : EditorWindow
     {
         protected virtual float LeftPanelWidthMin => 250f;
         protected virtual float RightPanelWidthMin => 350f;
@@ -18,7 +19,7 @@ namespace UtilsToolbox.Editor.EditorWindows
         private const float SeparatorWidth = 5f;
         private bool _isResizing;
 
-        protected override void SetSize()
+        private void OnEnable()
         {
             _leftPanelWidth = LeftPanelWidthMin;
             _rightPanelWidth = RightPanelWidthMin;

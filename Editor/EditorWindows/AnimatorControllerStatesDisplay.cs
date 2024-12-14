@@ -1,17 +1,18 @@
+using System;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
 namespace UtilsToolbox.Editor.EditorWindows
 {
-    public class AnimatorControllerStatesDisplay : EditorWindowBase
+    public class AnimatorControllerStatesDisplay : EditorWindow
     {
         private AnimatorController _animationController;
         private Vector2 _scrollPosition = Vector2.zero;
 
         private bool[] _foldoutExpandedArray;
 
-        protected override void SetSize()
+        private void OnEnable()
         {
             minSize = new Vector2(275, 400);
         }
