@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UtilsToolbox.Extensions
+namespace UtilsToolbox.Extensions.Primitive
 {
     public static class StringExtensions
     {
@@ -25,6 +25,16 @@ namespace UtilsToolbox.Extensions
         public static string Bold(this string text)
         {
             return $"<b>{text}</b>";
+        }
+        
+        /// <summary>
+        /// Makes log message italic.
+        /// </summary>
+        /// <param name="text"> string on which the method will be called </param>
+        /// <returns> italic text </returns>
+        public static string Italic(this string text)
+        {
+            return $"<i>{text}</i>";
         }
 
         /// <summary>

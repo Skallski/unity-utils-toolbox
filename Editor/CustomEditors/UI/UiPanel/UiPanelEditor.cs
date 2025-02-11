@@ -17,10 +17,9 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
         private bool _eventsUnfolded;
         private Color _oldGuiBackgroundColor;
         
-        private readonly HashSet<string> _propertyNamesToExclude = 
-            new HashSet<string>() { "m_Script", "_content", "_background", "_opened", "_closed"};
+        private readonly HashSet<string> _propertyNamesToExclude = new HashSet<string>() { "m_Script" };
 
-        protected virtual void OnEnable()
+        private void OnEnable()
         {
             _panel = target as UtilsToolbox.Utils.UI.UiPanel.UiPanel;
 
@@ -29,10 +28,25 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 
         protected virtual void SetupProperties()
         {
-            _content = serializedObject.FindProperty("_content");
-            _background = serializedObject.FindProperty("_background");
-            _opened = serializedObject.FindProperty("_opened");
-            _closed = serializedObject.FindProperty("_closed");
+            SetupProperty(ref _content, "_content");
+            SetupProperty(ref _background, "_background");
+            SetupProperty(ref _opened, "_opened");
+            SetupProperty(ref _closed, "_closed");
+        }
+
+        protected void SetupProperty(ref SerializedProperty serializedProperty, string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) || _propertyNamesToExclude.Contains(propertyName))
+            {
+                return;
+            }
+
+            SerializedProperty foundProperty = serializedObject.FindProperty(propertyName);
+            if (foundProperty != null)
+            {
+                serializedProperty = foundProperty;
+                _propertyNamesToExclude.Add(propertyName);
+            }
         }
 
         public override void OnInspectorGUI()
@@ -43,6 +57,16 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             }
             
             serializedObject.Update();
+            
+            DrawInspectorInternal();
+            DrawInheritorsFields();
+
+            EditorGUILayout.EndVertical();
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void DrawInspectorInternal()
+        {
             EditorGUILayout.BeginVertical();
             
             DrawBase();
@@ -52,14 +76,9 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             EditorGUILayout.Space();
             EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
             EditorGUILayout.Space();
-
-            DrawInheritorsFields(_propertyNamesToExclude);
-
-            EditorGUILayout.EndVertical();
-            serializedObject.ApplyModifiedProperties();
         }
 
-        protected void DrawBase()
+        private void DrawBase()
         {
             _oldGuiBackgroundColor = GUI.backgroundColor;
             
@@ -88,10 +107,9 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             EditorGUILayout.PropertyField(_background); // show background field
         }
 
-        protected void DrawEvents()
+        private void DrawEvents()
         {
-            _eventsUnfolded = EditorGUILayout.BeginFoldoutHeaderGroup(_eventsUnfolded,
-                "Panel Events");
+            _eventsUnfolded = EditorGUILayout.BeginFoldoutHeaderGroup(_eventsUnfolded, "Panel Events");
             if (_eventsUnfolded)
             {
                 EditorGUILayout.Space();
@@ -101,13 +119,13 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        protected void DrawInheritorsFields(HashSet<string> excludedPropertiesNames)
+        private void DrawInheritorsFields()
         {
             // workaround to display fields of the inheritors
             SerializedProperty iterator = serializedObject.GetIterator();
             for (bool enterChildren = true; iterator.NextVisible(enterChildren); enterChildren = false)
             {
-                if (excludedPropertiesNames.Contains(iterator.name))
+                if (_propertyNamesToExclude.Contains(iterator.name))
                 {
                     continue;
                 }

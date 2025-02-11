@@ -19,7 +19,7 @@ namespace UtilsToolbox.Utils.TranslationSystem
         [field: SerializeField] public TLanguage CurrentLanguage { get; protected set; }
         
         private readonly HashSet<TextSetter> _textSetters = new HashSet<TextSetter>();
-        private Root _rootDTO;
+        private TextsRoot _textsRootDto;
 
         protected virtual void Awake()
         {
@@ -99,7 +99,7 @@ namespace UtilsToolbox.Utils.TranslationSystem
         /// <returns> string that represents text of provided nameTag, translated in provided language </returns>
         private string GetTranslatedText(string nameTag, TLanguage language)
         {
-            var texts = _rootDTO.Texts;
+            var texts = _textsRootDto.Texts;
             if (texts == null || texts.Length == 0 || string.IsNullOrEmpty(nameTag))
             {
                 return null;
@@ -151,7 +151,7 @@ namespace UtilsToolbox.Utils.TranslationSystem
 
         #region TRANSLATION DTOS
         [Serializable]
-        protected class Root
+        protected class TextsRoot
         {
             public Text[] Texts;
         }

@@ -26,6 +26,19 @@ namespace UtilsToolbox.Utils.UI.UiPanel
             UiPanel.OnPanelClosed -= OnPanelClosed;
         }
 
+        protected virtual void Start()
+        {
+            if (_homePanel == null)
+            {
+                Debug.LogError("Home panel cannot be null!");
+            }
+            else
+            {
+                _activePanel = _homePanel;
+                SwitchToPanel(_activePanel);
+            }
+        }
+
         private void OnPanelOpened(UiPanel panel)
         {
             _activePanel = panel;

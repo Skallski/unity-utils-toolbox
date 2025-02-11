@@ -51,7 +51,7 @@ namespace UtilsToolbox.Utils.UI.UiPanel
         /// <summary>
         /// Opens panel
         /// </summary>
-        internal void Open(UiPanelOpeningParameters openingParameters)
+        internal void Open(UiPanelOpeningParameters openingParameters = null)
         {
             if (IsOpened == false)
             {

@@ -10,16 +10,12 @@ namespace UtilsToolbox.Utils.TimeBased.Update
             new Dictionary<UpdateType, List<Action>>();
 
         [field: SerializeField] public bool Paused { get; protected set; }
-        [SerializeField] public float _timeScale;
+        [SerializeField] public float _timeScale = 1;
         
         public float TimeScale
         {
             get => _timeScale;
-            set
-            {
-                _timeScale = value;
-                Debug.Log("xd");
-            }
+            set => _timeScale = value;
         }
 
 #if UNITY_EDITOR
@@ -33,7 +29,7 @@ namespace UtilsToolbox.Utils.TimeBased.Update
             UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 
-        private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
+        private static void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
         {
             if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
             {
@@ -72,7 +68,7 @@ namespace UtilsToolbox.Utils.TimeBased.Update
             InvokeActions(UpdateType.LateUpdateUnscaled);
         }
 
-        private void InvokeActions(UpdateType updateType)
+        private static void InvokeActions(UpdateType updateType)
         {
             if (UpdateLists.TryGetValue(updateType, out List<Action> actions))
             {

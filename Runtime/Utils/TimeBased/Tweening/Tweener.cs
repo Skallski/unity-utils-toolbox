@@ -75,7 +75,7 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
                 () => onFinish?.Invoke()
             ));
         }
-
+        
         public static void Tween(MonoBehaviour caller, TweenTimeMode mode, float duration, Action<float> onTick,
             Action onFinish = null)
         {
