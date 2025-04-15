@@ -1,13 +1,12 @@
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace UtilsToolbox.Utils.MultiSwitch
 {
-    public class MultiSwitchAnimationController : MultiSwitchWithParams<Animator, AnimatorController>
+    public class MultiSwitchAnimationController : MultiSwitchWithParams<Animator, RuntimeAnimatorController>
     {
-        protected override void SetStateInternalAction(Animator animator, AnimatorController value)
+        protected override void SetStateInternalAction(Animator animator, RuntimeAnimatorController controller)
         {
-            animator.runtimeAnimatorController = value;
+            animator.runtimeAnimatorController = controller;
         }
     }
 }
