@@ -69,5 +69,21 @@
                 (array[j], array[i]) = (array[i], array[j]);
             }
         }
+
+        /// <summary>
+        /// Gets index of the last element inside the array
+        /// </summary>
+        /// <param name="array"> array on which the method will be called </param>
+        /// <typeparam name="T"> type of array </typeparam>
+        /// <returns> int value that is the index of the last element inside the array </returns>
+        public static int GetLastElementIndex<T>(this T[] array)
+        {
+            if (array.Length == 0)
+            {
+                throw new System.IndexOutOfRangeException("Cannot select random item from empty array!");
+            }
+            
+            return array.Length - 1;
+        }
     }
 }

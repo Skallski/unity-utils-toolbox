@@ -10,18 +10,18 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
     public class UiPanelsManagerEditor : UnityEditor.Editor
     {
         private UiPanelsManager _uiPanelsManager;
-        
+
         private SerializedProperty _activePanel;
         private SerializedProperty _homePanel;
         private SerializedProperty _panels;
-        
-        private readonly HashSet<string> _propertyNamesToExclude = 
-            new HashSet<string>() { "m_Script", "_activePanel", "_homePanel", "_panels"};
+
+        private readonly HashSet<string> _propertyNamesToExclude =
+            new HashSet<string>() { "m_Script", "_activePanel", "_homePanel", "_panels" };
 
         private void OnEnable()
         {
             _uiPanelsManager = target as UiPanelsManager;
-            
+
             _activePanel = serializedObject.FindProperty("_activePanel");
             _homePanel = serializedObject.FindProperty("_homePanel");
             _panels = serializedObject.FindProperty("_panels");
@@ -33,7 +33,7 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             {
                 return;
             }
-            
+
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
 
@@ -63,7 +63,7 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             EditorGUILayout.Space();
             EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
             EditorGUILayout.Space();
-            
+
             // workaround to display fields of the inheritors
             SerializedProperty iterator = serializedObject.GetIterator();
             for (bool enterChildren = true; iterator.NextVisible(enterChildren); enterChildren = false)
@@ -75,34 +75,40 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 
                 EditorGUILayout.PropertyField(iterator, true);
             }
-            
+
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
         }
-        
+
         private void ShowGenericMenu()
         {
             if (_uiPanelsManager.GetType()
                     ?.GetField("_panels", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?.GetValue(_uiPanelsManager) is not List<UtilsToolbox.Utils.UI.UiPanel.UiPanel> panels)
+                    ?.GetValue(_uiPanelsManager) is not List<UiPanelBase> panels)
             {
                 return;
             }
-            
+
             GenericMenu menu = new GenericMenu();
-            
+
             for (int i = 0, c = panels.Count; i < c; i++)
             {
                 int index = i;
-                UtilsToolbox.Utils.UI.UiPanel.UiPanel panel = panels[i];
+                UiPanelBase panelBase = panels[i];
 
-                menu.AddItem(panel == null
+                menu.AddItem(panelBase == null
                         ? new GUIContent($"{index}: _")
-                        : new GUIContent($"{index}: {panel.gameObject.name}"),
+                        : new GUIContent($"{index}: {panelBase.gameObject.name}"),
                     false,
-                    () => _uiPanelsManager.SwitchToPanel(panel));
+                    () =>
+                    {
+                        MethodInfo method = _uiPanelsManager.GetType().GetMethod("SwitchToPanel", 
+                            new System.Type[] { typeof(UiPanelBase), typeof(UiPanelOpeningParameters) });
+
+                        method?.Invoke(_uiPanelsManager, new object[] { panelBase, null });
+                    });
             }
-            
+
             menu.ShowAsContext();
         }
     }

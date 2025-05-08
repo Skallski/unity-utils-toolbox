@@ -56,14 +56,14 @@ namespace UtilsToolbox.Utils.GameAI
 
         public void Scan()
         {
-            var offset = _targetObject.transform.position - _transform.position;
-            var sqrDistanceToTarget = offset.sqrMagnitude;
+            Vector3 offset = _targetObject.transform.position - _transform.position;
+            float sqrDistanceToTarget = offset.sqrMagnitude;
 
             if (sqrDistanceToTarget <= _radius * _radius)
             {
                 TargetInRange = true;
                 
-                var directionToTarget = offset.normalized;
+                Vector3 directionToTarget = offset.normalized;
 
                 if (Vector3.Angle(_transform.right, directionToTarget) < _angle * 0.5f)
                 {

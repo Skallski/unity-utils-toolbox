@@ -1,29 +1,43 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace UtilsToolbox.Utils.UI.UiPanel
 {
-    public class UiPanelsManager : MonoBehaviour
+    public class UiPanelsManager : MonoBehaviour 
     {
-        [SerializeField, CanBeNull] protected UiPanel _activePanel;
-        [SerializeField, CanBeNull] protected UiPanel _homePanel;
-        [SerializeField] protected List<UiPanel> _panels;
+        public static UiPanelsManager Instance { get; private set; }
+        
+        [SerializeField, CanBeNull] protected UiPanelBase _activePanel;
+        [SerializeField, CanBeNull] protected UiPanelBase _homePanel;
+        [SerializeField] protected List<UiPanelBase> _panels;
 
         private bool _isSwitchingPanels;
 
-        protected virtual void OnEnable()
+        private void Awake()
         {
-            UiPanel.OnPanelOpened += OnPanelOpened;
-            UiPanel.OnPanelClosed += OnPanelClosed;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
 
-        protected virtual void OnDisable()
+        private void OnEnable()
         {
-            UiPanel.OnPanelOpened -= OnPanelOpened;
-            UiPanel.OnPanelClosed -= OnPanelClosed;
+            UiPanelBase.OnPanelOpened += OnPanelOpened;
+            UiPanelBase.OnPanelClosed += OnPanelClosed;
+        }
+
+        private void OnDisable()
+        {
+            UiPanelBase.OnPanelOpened -= OnPanelOpened;
+            UiPanelBase.OnPanelClosed -= OnPanelClosed;
         }
 
         protected virtual void Start()
@@ -39,12 +53,12 @@ namespace UtilsToolbox.Utils.UI.UiPanel
             }
         }
 
-        private void OnPanelOpened(UiPanel panel)
+        private void OnPanelOpened(UiPanelBase panel)
         {
             _activePanel = panel;
         }
         
-        private void OnPanelClosed(UiPanel panel)
+        private void OnPanelClosed(UiPanelBase panel)
         {
             if (panel == _activePanel)
             {
@@ -52,20 +66,7 @@ namespace UtilsToolbox.Utils.UI.UiPanel
             }
         }
 
-        protected TPanel GetPanel<TPanel>(Predicate<int> predicate) where TPanel : UiPanel
-        {
-            for (int i = 0, c = _panels.Count; i < c; i++)
-            {
-                if (predicate != null && predicate.Invoke(i) && _panels[i] is TPanel panel)
-                {
-                    return panel;
-                }
-            }
-
-            return null;
-        }
-        
-        public void SwitchToPanel(UiPanel panel, UiPanelOpeningParameters openingParameters = null) 
+        public void SwitchToPanel(UiPanelBase panel, UiPanelOpeningParameters openingParameters = null)
         {
             if (panel == null)
             {
@@ -81,20 +82,29 @@ namespace UtilsToolbox.Utils.UI.UiPanel
             StartCoroutine(SwitchToPanel_Coroutine());
             IEnumerator SwitchToPanel_Coroutine()
             {
-                if (_activePanel == null)
+                _isSwitchingPanels = true;
+
+                if (_activePanel != null)
                 {
-                    Debug.LogError("Panel to close is null!");
-                    yield break;
+                    UiPanelBase closingPanelBase = _activePanel;
+                    closingPanelBase.Close();
+                    yield return new WaitUntil(() => closingPanelBase.IsOpened == false);
                 }
 
-                _isSwitchingPanels = true;
-                UiPanel bottomPanel = _activePanel;
-                _activePanel.Close();
-
-                yield return new WaitUntil(() => bottomPanel.IsOpened == false);
                 panel.Open(openingParameters);
+                _activePanel = panel;
                 _isSwitchingPanels = false;
             }
+        }
+
+        public void SwitchToPanel<TPanelType>(TPanelType panelType, UiPanelOpeningParameters openingParameters = null)
+            where TPanelType : System.Enum
+        {
+            UiPanel<TPanelType> nextPanel = _panels
+                .OfType<UiPanel<TPanelType>>()
+                .FirstOrDefault(p => p.PanelType.Equals(panelType));
+
+            SwitchToPanel(nextPanel, openingParameters);
         }
 
         public void SwitchToPanel(int panelIndex, UiPanelOpeningParameters openingParameters = null)

@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 {
-    [CustomEditor(typeof(UtilsToolbox.Utils.UI.UiPanel.UiPanel), true)]
+    [CustomEditor(typeof(UtilsToolbox.Utils.UI.UiPanel.UiPanelBase), true)]
     public class UiPanelEditor : UnityEditor.Editor
     {
-        private UtilsToolbox.Utils.UI.UiPanel.UiPanel _panel;
+        private UtilsToolbox.Utils.UI.UiPanel.UiPanelBase _panelBase;
 
         private SerializedProperty _content;
         private SerializedProperty _background;
@@ -21,20 +21,15 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 
         private void OnEnable()
         {
-            _panel = target as UtilsToolbox.Utils.UI.UiPanel.UiPanel;
+            _panelBase = target as UtilsToolbox.Utils.UI.UiPanel.UiPanelBase;
 
-            SetupProperties();
-        }
-
-        protected virtual void SetupProperties()
-        {
             SetupProperty(ref _content, "_content");
             SetupProperty(ref _background, "_background");
             SetupProperty(ref _opened, "_opened");
             SetupProperty(ref _closed, "_closed");
         }
 
-        protected void SetupProperty(ref SerializedProperty serializedProperty, string propertyName)
+        private void SetupProperty(ref SerializedProperty serializedProperty, string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) || _propertyNamesToExclude.Contains(propertyName))
             {
@@ -51,35 +46,15 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 
         public override void OnInspectorGUI()
         {
-            if (_panel == null)
+            if (_panelBase == null)
             {
                 return;
             }
             
             serializedObject.Update();
             
-            DrawInspectorInternal();
-            DrawInheritorsFields();
-
-            EditorGUILayout.EndVertical();
-            serializedObject.ApplyModifiedProperties();
-        }
-
-        protected virtual void DrawInspectorInternal()
-        {
             EditorGUILayout.BeginVertical();
             
-            DrawBase();
-            EditorGUILayout.Space();
-            
-            DrawEvents();
-            EditorGUILayout.Space();
-            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
-            EditorGUILayout.Space();
-        }
-
-        private void DrawBase()
-        {
             _oldGuiBackgroundColor = GUI.backgroundColor;
             
             // validate content field
@@ -105,10 +80,9 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
             }
             
             EditorGUILayout.PropertyField(_background); // show background field
-        }
-
-        private void DrawEvents()
-        {
+            
+            EditorGUILayout.Space();
+            
             _eventsUnfolded = EditorGUILayout.BeginFoldoutHeaderGroup(_eventsUnfolded, "Panel Events");
             if (_eventsUnfolded)
             {
@@ -117,10 +91,11 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
                 EditorGUILayout.PropertyField(_closed);
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
-        }
+            
+            EditorGUILayout.Space();
+            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
+            EditorGUILayout.Space();
 
-        private void DrawInheritorsFields()
-        {
             // workaround to display fields of the inheritors
             SerializedProperty iterator = serializedObject.GetIterator();
             for (bool enterChildren = true; iterator.NextVisible(enterChildren); enterChildren = false)
@@ -132,6 +107,9 @@ namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 
                 EditorGUILayout.PropertyField(iterator, true);
             }
+
+            EditorGUILayout.EndVertical();
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

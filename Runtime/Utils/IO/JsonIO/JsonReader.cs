@@ -6,29 +6,37 @@ namespace UtilsToolbox.Utils.IO.JsonIO
 {
     public static class JsonReader
     {
-        public static void Read<T>(string inputFilePath, Func<string, T> deserializeFunc, Action<T> onSuccess,
-            Action onError = null)
+        public static void Read<T>(string filePath, Func<string, T> deserializeFunc, 
+            Action<T> onSuccess, Action onError = null)
+            where T : class
         {
             try
             {
-                using (StreamReader reader = new StreamReader(inputFilePath))
+                using (StreamReader reader = new StreamReader(filePath))
                 {
                     string text = reader.ReadToEnd();
-                    T parsedData = deserializeFunc(text);
-
-                    onSuccess?.Invoke(parsedData);
+                    T data = JsonSerializer.Deserialize(deserializeFunc, text);
+                    if (data != null)
+                    {
+                        onSuccess?.Invoke(data);
+                    }
+                    else
+                    {
+                        onError?.Invoke();
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (IOException e)
             {
-                Debug.LogError($"JSON read error: {ex.Message}");
+                UnityEngine.Debug.LogError($"Error reading from file '{filePath}': {e.Message}");
                 onError?.Invoke();
             }
         }
         
-        public static void Read<T>(string inputFilePath, Action<T> onSuccess, Action onError = null)
+        public static void Read<T>(string filePath, Action<T> onSuccess, Action onError = null)
+            where T : class
         {
-            Read(inputFilePath, JsonUtility.FromJson<T>, onSuccess, onError);
+            Read(filePath, UnityEngine.JsonUtility.FromJson<T>, onSuccess, onError);
         }
     }
 }
