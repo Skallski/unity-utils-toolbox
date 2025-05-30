@@ -32,7 +32,7 @@ namespace UtilsToolbox.Extensions.Collections
         /// <param name="list"> list on which the method will be called </param>
         /// <typeparam name="T"> type of list </typeparam>
         /// <returns> random item from list </returns>
-        public static T RandomItem<T>(this IList<T> list)
+        public static T GetRandomItem<T>(this IList<T> list)
         {
             if (list.Count == 0)
             {

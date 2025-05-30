@@ -2,7 +2,8 @@ namespace UtilsToolbox.Utils.IO.JsonIO
 {
     public static class JsonSerializer
     {
-        public static string Serialize<T>(System.Func<T, string> serializer, T data) where T : class
+        public static string Serialize<T>(System.Func<T, string> serializer, T data) 
+            where T : class
         {
             try
             {

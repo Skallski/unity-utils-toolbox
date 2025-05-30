@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UtilsToolbox.Utils.Networking;
+using UtilsToolbox.Utils.IO.JsonIO;
 
-namespace UtilsToolbox.Utils.IO.JsonIO
+namespace UtilsToolbox.Utils.Networking.Rest.Json
 {
     public static class JsonOverHttpHandler
     {

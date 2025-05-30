@@ -25,6 +25,17 @@
         {
             return System.Array.FindIndex(array, match);
         }
+        
+        /// <summary>
+        /// Calls action on each array element
+        /// </summary>
+        /// <param name="array"> array on which the method will be called </param>
+        /// <param name="onElementAction"> action that is performed on each array element</param>
+        /// <typeparam name="T"> type of array element </typeparam>
+        public static void ForEach<T>(this T[] array, System.Action<T> onElementAction)
+        {
+            System.Array.ForEach(array, onElementAction);
+        }
 
         /// <summary>
         /// Creates a subset of an array
@@ -45,7 +56,7 @@
         /// <param name="array"> array on which the method will be called </param>
         /// <typeparam name="T"> type of array </typeparam>
         /// <returns> random item from array </returns>
-        public static T RandomItem<T>(this T[] array)
+        public static T GetRandomItem<T>(this T[] array)
         {
             if (array.Length == 0)
             {
@@ -84,6 +95,28 @@
             }
             
             return array.Length - 1;
+        }
+
+        /// <summary>
+        /// Gets first array element or default
+        /// </summary>
+        /// <param name="array"> array on which the method will be called </param>
+        /// <typeparam name="T"> type of array </typeparam>
+        /// <returns> first array element or default value </returns>
+        public static T FirstOrDefault<T>(this T[] array)
+        {
+            return array[0] ?? default;
+        }
+        
+        /// <summary>
+        /// Gets last array element or default
+        /// </summary>
+        /// <param name="array"> array on which the method will be called </param>
+        /// <typeparam name="T"> type of array </typeparam>
+        /// <returns> first array element or default value </returns>
+        public static T LastOrDefault<T>(this T[] array)
+        {
+            return array[^1] ?? default;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace UtilsToolbox.Utils.Networking
+namespace UtilsToolbox.Utils.Networking.Rest
 {
     public enum WebRequestType
     {

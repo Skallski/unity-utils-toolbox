@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace UtilsToolbox.Utils.Networking
+namespace UtilsToolbox.Utils.Networking.Rest
 {
     public static class WebRequestSender
     {

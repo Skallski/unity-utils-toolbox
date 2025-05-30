@@ -1,6 +1,6 @@
 using UnityEngine.Networking;
 
-namespace UtilsToolbox.Utils.Networking
+namespace UtilsToolbox.Utils.Networking.Rest
 {
     internal static class WebRequestFactory
     {

@@ -19,7 +19,7 @@ namespace UtilsToolbox.Utils.IO.ImageIO
         {
             try
             {
-                System.IO.File.WriteAllBytesAsync(outputPath, encodedSprite);
+                System.IO.File.WriteAllBytes(outputPath, encodedSprite);
             }
             catch (Exception e)
             {

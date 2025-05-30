@@ -73,8 +73,8 @@ namespace UtilsToolbox.Utils.GameAI
                     }
                     else
                     {
-                        TargetSpotted = !Physics2D.Raycast(_transform.position, directionToTarget, 
-                            sqrDistanceToTarget * sqrDistanceToTarget, _obstacleLayer);
+                        TargetSpotted = Physics2D.Raycast(_transform.position, directionToTarget, 
+                            sqrDistanceToTarget * sqrDistanceToTarget, _obstacleLayer) == false;
                     }
                 }
                 else

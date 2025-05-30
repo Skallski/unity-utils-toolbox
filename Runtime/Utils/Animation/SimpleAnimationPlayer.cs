@@ -113,8 +113,7 @@ namespace UtilsToolbox.Utils.Animation
                 }
             }
         }
-
-
+        
         public void Stop()
         {
             _isPlaying = false;
