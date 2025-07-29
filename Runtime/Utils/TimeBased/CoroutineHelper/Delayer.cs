@@ -7,58 +7,58 @@ namespace UtilsToolbox.Utils.TimeBased.CoroutineHelper
     public static class Delayer
     {
         /// <summary>
-        /// Invokes callback next frame
+        /// Delays callback invocation by single frame
         /// </summary>
-        /// <param name="callback"> callback, that will be called in next frame </param>
+        /// <param name="callback"> action that will be performed after the delay </param>
         /// <returns></returns>
-        public static IEnumerator InvokeNextFrame(Action callback)
+        public static IEnumerator DelaySingleFrame(Action callback)
         {
             yield return null;
             callback?.Invoke();
         }
 
         /// <summary>
-        /// Invokes callback after n seconds of time
+        /// Delays callback invocation by amount of time
         /// </summary>
-        /// <param name="callback"> callback, that will be called after one second </param>
-        /// <param name="time"> time, after which the callback will be called </param>
+        /// <param name="callback"> action that will be performed after the delay </param>
+        /// <param name="time"> amount of time that delays the callback </param>
         /// <returns></returns>
-        public static IEnumerator InvokeAfterTime(Action callback, float time)
+        public static IEnumerator Delay(Action callback, float time)
         {
-            return InvokeDelayed(callback, new WaitForSeconds(time));
+            return Delay(callback, new WaitForSeconds(time));
         }
         
         /// <summary>
-        /// Invokes callback after coroutine is completed
+        /// Delays callback invocation by a coroutine
         /// </summary>
-        /// <param name="callback"> callback, that will be called after coroutine completes </param>
-        /// <param name="coroutine"> coroutine, after which callback will be called </param>
+        /// <param name="callback"> action that will be performed after the delay </param>
+        /// <param name="coroutine"> coroutine to wait for </param>
         /// <returns></returns>
-        public static IEnumerator InvokeDelayed(Action callback, IEnumerator coroutine = null)
+        public static IEnumerator Delay(Action callback, IEnumerator coroutine)
         {
             yield return coroutine;
             callback?.Invoke();
         }
 
         /// <summary>
-        /// Invokes action after yield instruction is completed
+        /// Delays callback invocation by a custom yield instruction
         /// </summary>
-        /// <param name="callback"> callback, that will be called after yield instruction completes </param>
-        /// <param name="yieldInstruction"> custom yield instruction </param>
+        /// <param name="callback"> action that will be performed after the delay </param>
+        /// <param name="customYieldInstruction"> custom yield instruction to wait for </param>
         /// <returns></returns>
-        public static IEnumerator InvokeDelayed(Action callback, CustomYieldInstruction yieldInstruction)
+        public static IEnumerator Delay(Action callback, CustomYieldInstruction customYieldInstruction)
         {
-            yield return yieldInstruction;
+            yield return customYieldInstruction;
             callback?.Invoke();
         }
         
         /// <summary>
-        /// Invokes action after yield instruction is completed
+        /// Delays callback invocation by a yield instruction
         /// </summary>
-        /// <param name="callback"> callback, that will be called after yield instruction completes </param>
-        /// <param name="yieldInstruction"> basic yield instruction </param>
+        /// <param name="callback"> action that will be performed after the delay </param>
+        /// <param name="yieldInstruction"> basic yield instruction to wait for </param>
         /// <returns></returns>
-        public static IEnumerator InvokeDelayed(Action callback, YieldInstruction yieldInstruction)
+        public static IEnumerator Delay(Action callback, YieldInstruction yieldInstruction)
         {
             yield return yieldInstruction;
             callback?.Invoke();

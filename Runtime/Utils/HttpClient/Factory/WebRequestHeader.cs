@@ -1,6 +1,6 @@
-namespace UtilsToolbox.Utils.Networking.Rest
+namespace UtilsToolbox.Utils.HttpClient.Factory
 {
-    public class WebRequestHeader
+    public struct WebRequestHeader
     {
         public readonly string Name;
         public readonly string Value;

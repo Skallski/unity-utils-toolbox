@@ -1,28 +1,48 @@
+using System;
 using UnityEngine;
 
 namespace UtilsToolbox.Utils.TimeBased.Tweening
 {
     public class TweenHandle
     {
-        private readonly MonoBehaviour _caller;
+        private MonoBehaviour _caller;
         private Coroutine _coroutine;
+        private Action _onSkip;
         internal bool IsActive { get; private set; }
 
-        internal TweenHandle(MonoBehaviour caller, Coroutine coroutine)
+        internal TweenHandle(MonoBehaviour caller, Coroutine coroutine, Action onSkip)
         {
-            _caller = caller;
-            _coroutine = coroutine;
+            _caller = caller ?? throw new ArgumentNullException("Coroutine caller cannot be null!");
+            _coroutine = coroutine ?? throw new ArgumentNullException("Coroutine cannot be null!");
+            _onSkip = onSkip ?? throw new ArgumentNullException("Skip action cannot be null!");
+
             IsActive = true;
         }
-        
+
+        private void InterruptInternal(Action onInterrupt = null)
+        {
+            if (IsActive == false)
+            {
+                return;
+            }
+
+            _caller.StopCoroutine(_coroutine);
+            onInterrupt?.Invoke();
+            IsActive = false;
+                
+            _caller = null;
+            _coroutine = null;
+            _onSkip = null;
+        }
+
         public void Interrupt()
         {
-            if (IsActive && _coroutine != null && _caller != null)
-            {
-                _caller.StopCoroutine(_coroutine);
-                IsActive = false;
-                _coroutine = null;
-            }
+            InterruptInternal();
+        }
+
+        public void Skip()
+        {
+            InterruptInternal(_onSkip);
         }
     }
 }
