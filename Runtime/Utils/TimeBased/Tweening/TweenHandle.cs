@@ -19,7 +19,7 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
             IsActive = true;
         }
 
-        private void InterruptInternal(Action onInterrupt = null)
+        private void End(Action onFinish = null)
         {
             if (IsActive == false)
             {
@@ -27,7 +27,7 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
             }
 
             _caller.StopCoroutine(_coroutine);
-            onInterrupt?.Invoke();
+            onFinish?.Invoke();
             IsActive = false;
                 
             _caller = null;
@@ -35,14 +35,23 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
             _onSkip = null;
         }
 
-        public void Interrupt()
+        /// <summary>
+        /// Immediately aborts the tween at the moment this method is called.
+        /// The tween runs normally until this point and does not complete its final state
+        /// (use <see cref="Skip"/> to force completion).
+        /// </summary>
+        public void Abort()
         {
-            InterruptInternal();
+            End();
         }
 
+        /// <summary>
+        /// Immediately completes the tween when called, forcing its final state
+        /// (use <see cref="Abort"/> to stop it without completing).
+        /// </summary>
         public void Skip()
         {
-            InterruptInternal(_onSkip);
+            End(_onSkip);
         }
     }
 }

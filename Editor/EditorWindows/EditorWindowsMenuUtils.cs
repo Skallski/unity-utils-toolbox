@@ -1,4 +1,5 @@
 using System;
+using Editor;
 using UnityEditor;
 using UnityEngine;
 using UtilsToolbox.EditorWindows.TextHelperTool;
@@ -37,6 +38,12 @@ namespace UtilsToolbox.Editor.EditorWindows
         public static void OpenTmpFinder()
         {
             OpenWindow<TextHelperToolWindow>();
+        }
+        
+        [MenuItem(MENU_ROOT + "Reverse Spritesheet Animation Clip Generator")]
+        public static void OpenReverseSpritesheetAnimationClipGenerator()
+        {
+            OpenWindow<ReverseSpritesheetAnimationClipGenerator>();
         }
 
         private static void OpenWindow<TWindow>() where TWindow : EditorWindow

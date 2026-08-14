@@ -87,21 +87,21 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
             return StartTween(caller, Tween_Coroutine(mode, duration, onTick, onFinish), onFinish);
         }
 
-        public static void InterruptTween(TweenHandle tweenHandle, Action onInterrupted = null)
+        public static void AbortTween(TweenHandle tweenHandle, Action onAbort = null)
         {
             if (tweenHandle is { IsActive: true })
             {
-                tweenHandle.Interrupt();
-                onInterrupted?.Invoke();
+                tweenHandle.Abort();
+                onAbort?.Invoke();
             }
         }
 
-        public static void SkipTween(TweenHandle tweenHandle, Action onSkipped = null)
+        public static void SkipTween(TweenHandle tweenHandle, Action onSkip = null)
         {
             if (tweenHandle is { IsActive: true})
             {
                 tweenHandle.Skip();
-                onSkipped?.Invoke();
+                onSkip?.Invoke();
             }
         }
         #endregion
