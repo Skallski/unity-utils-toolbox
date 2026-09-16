@@ -7,8 +7,8 @@ namespace UtilsToolbox.Utils.TimeBased.Tweening
     public static class Tweener
     {
         #region PUBLIC METHODS
-        public static TweenHandle TweenScale(MonoBehaviour caller, TweenTimeMode mode, GameObject target, Vector2 startScale,
-            Vector2 finishScale, float duration, Action onFinish = null)
+        public static TweenHandle TweenScale(MonoBehaviour caller, TweenTimeMode mode, GameObject target, Vector3 startScale,
+            Vector3 finishScale, float duration, Action onFinish = null)
         {
             return Tween(caller, mode, duration,
                 tickDelta => target.transform.localScale = Vector3.Lerp(startScale, finishScale, tickDelta),

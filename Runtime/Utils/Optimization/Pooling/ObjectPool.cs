@@ -121,7 +121,7 @@ namespace UtilsToolbox.Utils.Optimization.Pooling
         /// Returns object to pool
         /// </summary>
         /// <param name="obj"></param>
-        private void ReleaseObject(PoolableObject obj)
+        public void ReleaseObject(PoolableObject obj)
         {
             if (obj == null)
             {
